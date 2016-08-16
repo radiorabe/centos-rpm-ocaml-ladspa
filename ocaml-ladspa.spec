@@ -37,6 +37,8 @@ make install
 /usr/lib64/ocaml/ladspa/ladspa.cmi
 /usr/lib64/ocaml/ladspa/ladspa.cmxa
 /usr/lib64/ocaml/ladspa/ladspa.mli
+/usr/lib64/ocaml/ladspa/ladspa.cmx
+/usr/lib64/ocaml/ladspa/ocaml_ladspa.h
 /usr/lib64/ocaml/ladspa/libladspa_stubs.a
 /usr/lib64/ocaml/stublibs/dllladspa_stubs.so
 /usr/lib64/ocaml/stublibs/dllladspa_stubs.so.owner
