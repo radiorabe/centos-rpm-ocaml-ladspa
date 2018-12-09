@@ -1,24 +1,40 @@
 Name:     ocaml-ladspa
-
 Version:  0.1.5
-Release:  1
+Release:  2
 Summary:  OCaml bindings for ladspa
+
+%global libname %(echo %{name} | sed -e 's/^ocaml-//')
+
 License:  GPLv2+
 URL:      https://github.com/savonet/ocaml-ladspa
-Source0:  https://github.com/savonet/ocaml-ladspa/releases/download/%{version}/ocaml-ladspa-%{version}.tar.gz
+Source0:  https://github.com/savonet/ocaml-ladspa/releases/download/%{version}/%{name}-%{version}.tar.gz
 
 BuildRequires: ocaml
 BuildRequires: ocaml-findlib
 BuildRequires: ladspa-devel
 Requires:      ladspa
 
+
+%description
+OCAML bindings for ladspa
+
+
+%package        devel
+Summary:        Development files for %{name}
+Requires:       %{name} = %{version}-%{release}
+
+%description    devel
+The %{name}-devel package contains libraries and signature
+files for developing applications that use %{name}.
+
+
 %prep
-%setup -q 
+%autosetup -n %{name}-%{version}
 
 %build
 ./configure \
    --prefix=%{_prefix} \
-   -disable-ldconf
+   --disable-ldconf
 make all
 
 %install
@@ -31,22 +47,29 @@ install -d $OCAMLFIND_DESTDIR/stublibs
 make install
 
 %files
-/usr/lib64/ocaml/ladspa/META
-/usr/lib64/ocaml/ladspa/ladspa.a
-/usr/lib64/ocaml/ladspa/ladspa.cma
-/usr/lib64/ocaml/ladspa/ladspa.cmi
-/usr/lib64/ocaml/ladspa/ladspa.cmxa
-/usr/lib64/ocaml/ladspa/ladspa.mli
-/usr/lib64/ocaml/ladspa/ladspa.cmx
-/usr/lib64/ocaml/ladspa/ocaml_ladspa.h
-/usr/lib64/ocaml/ladspa/libladspa_stubs.a
-/usr/lib64/ocaml/stublibs/dllladspa_stubs.so
-/usr/lib64/ocaml/stublibs/dllladspa_stubs.so.owner
+%license COPYING
+%{_libdir}/ocaml/%{libname}
+%{_libdir}/ocaml/stublibs/dll%{libname}_stubs.so
+%{_libdir}/ocaml/stublibs/dll%{libname}_stubs.so.owner
+%ifarch %{ocaml_native_compiler}
+%exclude %{_libdir}/ocaml/%{libname}/*.a
+%exclude %{_libdir}/ocaml/%{libname}/*.cmxa
+%exclude %{_libdir}/ocaml/%{libname}/*.cmx
+%exclude %{_libdir}/ocaml/%{libname}/*.mli
+%endif
 
-%description
-OCAML bindings for ladspa
-
+%files devel
+%license COPYING
+%ifarch %{ocaml_native_compiler}
+%{_libdir}/ocaml/%{libname}/*.a
+%{_libdir}/ocaml/%{libname}/*.cmxa
+%{_libdir}/ocaml/%{libname}/*.cmx
+%{_libdir}/ocaml/%{libname}/*.mli
+%endif
 
 %changelog
-* Sun Jul  3 2016 Lucas Bickel <hairmare@rabe.ch>
+* Sun Dec  9 2018 Lucas Bickel <hairmare@rabe.ch> - 0.1.5-2
+- Cleanup and add separate -devel subpackage
+
+* Sun Jul  3 2016 Lucas Bickel <hairmare@rabe.ch> - 0.1.5-1
 - initial version, mostly stolen from https://www.openmamba.org/showfile.html?file=/pub/openmamba/devel/specs/ocaml-ladspa.spec
